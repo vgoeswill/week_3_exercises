@@ -1,0 +1,10 @@
+---
+title: "Week 3 Exercises"
+author: "J.Blondeau"
+date: "2023-09-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
