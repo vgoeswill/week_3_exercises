@@ -17,25 +17,69 @@ triple stars renders a thin line across the page
 
 ***
 1. Import sttstj_all_sites and inspect the data set.  What is the data structure and the data type of each field?
-
+The data has 4 columns 2 of which are numeric and 2 of wich are characters
 
 ```{r}
  #this is a code chunk, anything inside the back tics is like being in the R console.
 
+library(readxl)
+sttstj_all_sites <- read_excel("data/sttstj_all_sites.xlsx", 
+    sheet = "locations")
+View(sttstj_all_sites)
+head(sttstj_all_sites)
 
 
 ```
 ***
 
-2. How many samples are in the data set?         
+2. How many samples are in the data set? 
+There are 2505 samples in the data set.
+```{r}
+nrow(sttstj_all_sites)
+
+```
 
 3. How many unique habitat types are there?  What are the names of each habitat?
+There are 6 unique habitats. The names of each habitat are "PVMT" "AGRF" "SCR"  "PTRF" "BDRK" "HARD". 
+```{r}
+library(dplyr)
+library(tidyr)
+
+n_distinct(sttstj_all_sites$hab)
+unique(sttstj_all_sites$hab)
+
+```
+
 
 4. How many sites are there in the "PVMT" habitat type?
+There are 571 sites
+
+```{r}
+sttstj_all_sites %>%
+  filter(hab == "PVMT")%>%
+  summarize(length(unique(yr_site)))
+
+```
 
 5. How many sites are there in the "PVMT" or "AGRF" habitat types?
+There 1538 habitat types
 
+```{r}
+sttstj_all_sites %>%
+  filter(hab == "PVMT"|hab == "AGRF")%>%
+  summarize(length(unique(yr_site)))
+
+```
 6. How many sites are there in all the habitat types EXCEPT "PVMT"?
+
+There are 1934 sites in all habitat types EXCEPT "PVMT"
+
+```{r}
+sttstj_all_sites %>%
+  filter(hab != "PVMT") %>%
+  summarize(length(unique(yr_site)))
+
+```
 
 7. Show the first 5 records (rows) of...
     - all sites sampled in "AGRF" or "SCR"
@@ -44,12 +88,44 @@ triple stars renders a thin line across the page
 <!-- extra line break -->
 <br>
 
+```{r}
+first_five <- sttstj_all_sites %>%
+  filter(hab == "AGRF"|hab == "SCR") %>%
+  select(yr_site,hab) %>%
+  slice(1:5)
+  
+```
+
 8. What is the northern most site sampled in the "BDRK" habitat?
+The northern most site is 2019_5450.
+```{r}
+northern_most <- sttstj_all_sites %>%
+  filter(hab == "BDRK") %>%
+  arrange(desc(lat))
+  
+head(northern_most)
+```
 
 9. What is the western most site sampled in either "AGRF" or "PTRF" habitat?
-
+2015_9758 is the western most site sampled in either "AGRF" or "PTRF" habitat.
+```{r}
+western_most <- sttstj_all_sites %>%
+  filter(hab == "AGRF" | hab == "PTRF") %>%
+  arrange(lon)
+  
+head(western_most)
+```
 10. How many years were surveyed in the data set?
+  16 years
+```{r}
 
+count_years <- sttstj_all_sites %>%
+  separate(yr_site, c("year", "site", "_"))
+
+count_years %>% 
+  summarize(length(unique(year)))
+
+```
 11. What is the southern most site sample in the "PVMT" habitat in 2004?
 
 
