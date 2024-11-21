@@ -25,10 +25,9 @@ The data has 4 columns 2 of which are numeric and 2 of wich are characters
 library(readxl)
 sttstj_all_sites <- read_excel("data/sttstj_all_sites.xlsx", 
     sheet = "locations")
-View(sttstj_all_sites)
 head(sttstj_all_sites)
 
-
+#glimpse(data)
 ```
 ***
 
@@ -37,6 +36,7 @@ There are 2505 samples in the data set.
 ```{r}
 nrow(sttstj_all_sites)
 
+ #print(nrow(data))
 ```
 
 3. How many unique habitat types are there?  What are the names of each habitat?
@@ -48,6 +48,8 @@ library(tidyr)
 n_distinct(sttstj_all_sites$hab)
 unique(sttstj_all_sites$hab)
 
+# hab_types <- unique(data$hab) 
+#print(hab_types)
 ```
 
 
@@ -59,6 +61,8 @@ sttstj_all_sites %>%
   filter(hab == "PVMT")%>%
   summarize(length(unique(yr_site)))
 
+#data %>% count(hab)
+
 ```
 
 5. How many sites are there in the "PVMT" or "AGRF" habitat types?
@@ -69,6 +73,10 @@ sttstj_all_sites %>%
   filter(hab == "PVMT"|hab == "AGRF")%>%
   summarize(length(unique(yr_site)))
 
+#data %>% 
+  # filter(hab %in% c("PVMT","AGRF")) %>% 
+  # count(hab) %>% 
+  # summarise(tot = sum(n))
 ```
 6. How many sites are there in all the habitat types EXCEPT "PVMT"?
 
@@ -78,6 +86,11 @@ There are 1934 sites in all habitat types EXCEPT "PVMT"
 sttstj_all_sites %>%
   filter(hab != "PVMT") %>%
   summarize(length(unique(yr_site)))
+
+# data %>% 
+#   filter(hab != "PVMT") %>% 
+#   count(hab) %>% 
+#   summarise(tot = sum(n))
 
 ```
 
@@ -93,6 +106,10 @@ first_five <- sttstj_all_sites %>%
   filter(hab == "AGRF"|hab == "SCR") %>%
   select(yr_site,hab) %>%
   slice(1:5)
+
+# data %>% 
+#   filter(hab %in% c("AGRF", "SCR")) %>% 
+#   head()
   
 ```
 
@@ -104,6 +121,10 @@ northern_most <- sttstj_all_sites %>%
   arrange(desc(lat))
   
 head(northern_most)
+
+# data %>% 
+#   filter(hab == "BDRK") %>% 
+#   arrange(desc(lat))
 ```
 
 9. What is the western most site sampled in either "AGRF" or "PTRF" habitat?
@@ -114,6 +135,7 @@ western_most <- sttstj_all_sites %>%
   arrange(lon)
   
 head(western_most)
+
 ```
 10. How many years were surveyed in the data set?
   16 years
@@ -125,8 +147,18 @@ count_years <- sttstj_all_sites %>%
 count_years %>% 
   summarize(length(unique(year)))
 
+# data %>% 
+#   mutate(year = as.integer(substr(yr_site, 1,4))) %>% 
+#   summarise(length(unique(year)))
 ```
 11. What is the southern most site sample in the "PVMT" habitat in 2004?
-
+2004_1932 is the southern most site sample in the "PVMT" habitat in 2004
+```{r}
+southern_most <- count_years %>%
+  filter(hab == "PVMT", year == 2004) %>%
+  arrange(lat)
+  
+head(southern_most)
+```
 
 
